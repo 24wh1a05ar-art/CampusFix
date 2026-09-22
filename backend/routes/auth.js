@@ -8,7 +8,12 @@ console.log("Auth routes loaded");
 
 router.post("/register", async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+       const { name, email, password, role } = req.body;
+       if (!["student", "admin"].includes(role)) {
+    return res.status(400).json({
+        message: "Invalid account type"
+    });
+}
 
         const existingUser = await User.findOne({ email });
 
@@ -18,16 +23,29 @@ router.post("/register", async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = await User.create({
-            name,
-            email,
-            password: hashedPassword
-        });
+      const user = await User.create({
+    name,
+    email,
+    password: hashedPassword,
+    role: role || "student"
+});
 
-        res.status(201).json({
-            message: "Registration successful",
-            userId: user._id
-        });
+        const token = jwt.sign(
+    { userId: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+);
+
+res.status(201).json({
+    message: "Registration successful",
+    token,
+    user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+    }
+});
 
     } catch (error) {
         res.status(500).json({ message: "Registration failed" });

@@ -170,20 +170,22 @@
 
     </div>
 
+   
+    <input
+    type="email"
+    id="email"
+    placeholder="Email Address"
+    autocomplete="new-password"
+    required
+>
+
 
     <input
-        type="email"
-        id="email"
-        placeholder="Email address"
-    >
-
-
-    <input
-        type="password"
-        id="password"
-        placeholder="Password"
-    >
-
+    type="password"
+    id="password"
+    placeholder="Password"
+    autocomplete="new-password"
+>
 
     <button
         class="login-button"
@@ -349,8 +351,7 @@ async function login() {
 
             } else {
 
-                window.location.href =
-                    "index.html";
+                window.location.href = "student.html";
 
             }
 
