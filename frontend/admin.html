@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusFix - Admin Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+
+        /* HEADER */
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h1 {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .admin-header p {
+            color: #666;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-user span {
+            font-weight: bold;
+        }
+
+        .admin-user button {
+            width: auto;
+            padding: 9px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #dc2626;
+            color: white;
+            cursor: pointer;
+        }
+
+        .admin-user button:hover {
+            background: #b91c1c;
+        }
+
+
+        /* STATS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-card h3 {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+
+        /* CARD */
+
+        .card {
+            background: white;
+            padding: 28px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+
+        /* FILTERS */
+
+        .filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .filters input,
+        .filters select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .filters input:focus,
+        .filters select:focus {
+            border-color: #2563eb;
+        }
+
+
+        /* ISSUE */
+
+        .issue {
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background: #fafbfc;
+        }
+
+        .issue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .issue h3 {
+            margin-bottom: 6px;
+        }
+
+        .issue-id {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .issue p {
+            margin: 7px 0;
+            color: #555;
+        }
+
+
+        /* BADGES */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .priority-low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-progress {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-resolved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+
+        /* STATUS UPDATE */
+
+        .issue-actions {
+            margin-top: 15px;
+        }
+
+        .issue-actions select {
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+            padding: 20px 0;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .issue-header {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <header class="admin-header">
+
+        <div>
+
+            <h1>CampusFix Admin Dashboard</h1>
+
+            <p>
+                Monitor and manage campus issues
+            </p>
+
+        </div>
+
+
+        <div class="admin-user">
+
+            <span id="adminName"></span>
+
+            <button onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <h3>Total Issues</h3>
+
+            <p id="totalIssues">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>Pending</h3>
+
+            <p id="pendingIssues">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>In Progress</h3>
+
+            <p id="progressIssues">
+                0
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <h3>Resolved</h3>
+
+            <p id="resolvedIssues">
+                0
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ISSUES -->
+
+    <div class="card">
+
+        <h2>All Campus Issues</h2>
+
+        <p class="subtitle">
+            Search, filter and manage reported issues.
+        </p>
+
+
+        <!-- FILTERS -->
+
+        <div class="filters">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search issues..."
+                oninput="filterIssues()"
+            >
+
+
+            <select
+                id="statusFilter"
+                onchange="filterIssues()"
+            >
+
+                <option value="">
+                    All Statuses
+                </option>
+
+                <option value="Pending">
+                    Pending
+                </option>
+
+                <option value="In Progress">
+                    In Progress
+                </option>
+
+                <option value="Resolved">
+                    Resolved
+                </option>
+
+                <option value="Rejected">
+                    Rejected
+                </option>
+
+            </select>
+
+
+            <select
+                id="categoryFilter"
+                onchange="filterIssues()"
+            >
+
+                <option value="">
+                    All Categories
+                </option>
+
+                <option value="Wi-Fi">
+                    Wi-Fi
+                </option>
+
+                <option value="Electrical">
+                    Electrical
+                </option>
+
+                <option value="Water">
+                    Water
+                </option>
+
+                <option value="Hostel">
+                    Hostel
+                </option>
+
+                <option value="Classroom">
+                    Classroom
+                </option>
+
+                <option value="Laboratory">
+                    Laboratory
+                </option>
+
+                <option value="Cleaning">
+                    Cleaning
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div id="issues"></div>
+
+    </div>
+
+
+    <footer>
+
+        CampusFix © 2026 |
+        Campus Issue Management System
+
+    </footer>
+
+
+</div>
+
+
+<script>
+
+const API_URL =
+    "http://localhost:5000";
+
+
+const token =
+    localStorage.getItem("token");
+
+
+const user =
+    JSON.parse(localStorage.getItem("user"));
+
+
+if (
+    !token ||
+    !user ||
+    user.role !== "admin"
+) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+document.getElementById("adminName").textContent =
+    `Welcome, ${user.name}`;
+
+
+function logout() {
+
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("user");
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+let allIssues = [];
+
+
+async function loadIssues() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/issues`,
+                {
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            alert("Unable to load issues.");
+
+            return;
+
+        }
+
+
+        allIssues =
+            await response.json();
+
+
+        updateStats(allIssues);
+
+        filterIssues();
+
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+
+function updateStats(issues) {
+
+    document.getElementById("totalIssues").textContent =
+        issues.length;
+
+
+    document.getElementById("pendingIssues").textContent =
+        issues.filter(
+            issue => issue.status === "Pending"
+        ).length;
+
+
+    document.getElementById("progressIssues").textContent =
+        issues.filter(
+            issue => issue.status === "In Progress"
+        ).length;
+
+
+    document.getElementById("resolvedIssues").textContent =
+        issues.filter(
+            issue => issue.status === "Resolved"
+        ).length;
+
+}
+
+
+function filterIssues() {
+
+    const search =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+
+    const status =
+        document
+            .getElementById("statusFilter")
+            .value;
+
+
+    const category =
+        document
+            .getElementById("categoryFilter")
+            .value;
+
+
+    const filtered =
+        allIssues.filter(issue => {
+
+            const matchesSearch =
+                issue.title
+                    .toLowerCase()
+                    .includes(search) ||
+
+                issue.description
+                    .toLowerCase()
+                    .includes(search) ||
+
+                issue.location
+                    .toLowerCase()
+                    .includes(search);
+
+
+            const matchesStatus =
+                !status ||
+                issue.status === status;
+
+
+            const matchesCategory =
+                !category ||
+                issue.category === category;
+
+
+            return (
+                matchesSearch &&
+                matchesStatus &&
+                matchesCategory
+            );
+
+        });
+
+
+    displayIssues(filtered);
+
+}
+
+
+function displayIssues(issues) {
+
+    const container =
+        document.getElementById("issues");
+
+
+    container.innerHTML = "";
+
+
+    if (issues.length === 0) {
+
+        container.innerHTML =
+            "<p>No matching issues found.</p>";
+
+        return;
+
+    }
+
+
+    issues.forEach(issue => {
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "issue";
+
+
+        const priorityClass =
+            issue.priority === "High"
+                ? "priority-high"
+                : issue.priority === "Medium"
+                    ? "priority-medium"
+                    : "priority-low";
+
+
+        const statusClass =
+            issue.status === "Pending"
+                ? "status-pending"
+                : issue.status === "In Progress"
+                    ? "status-progress"
+                    : issue.status === "Resolved"
+                        ? "status-resolved"
+                        : "status-rejected";
+
+
+        const date =
+            new Date(issue.createdAt)
+                .toLocaleString();
+
+
+        div.innerHTML = `
+
+            <div class="issue-header">
+
+                <div>
+
+                    <h3>
+                        ${issue.title}
+                    </h3>
+
+                    <span class="issue-id">
+                        ID: ${issue._id}
+                    </span>
+
+                </div>
+
+                <span class="badge ${statusClass}">
+                    ${issue.status}
+                </span>
+
+            </div>
+
+
+            <p>
+                ${issue.description}
+            </p>
+
+
+            <p>
+                <strong>Category:</strong>
+                ${issue.category}
+            </p>
+
+
+            <p>
+                <strong>Location:</strong>
+                ${issue.location}
+            </p>
+
+
+            <p>
+                <strong>Priority:</strong>
+
+                <span class="badge ${priorityClass}">
+                    ${issue.priority}
+                </span>
+
+            </p>
+
+
+            <p>
+                <strong>Reported by:</strong>
+                ${issue.reportedBy.name}
+                (${issue.reportedBy.email})
+            </p>
+
+
+            <p>
+                <strong>Reported:</strong>
+                ${date}
+            </p>
+
+
+            <div class="issue-actions">
+
+                <select
+                    onchange="updateStatus('${issue._id}', this.value)"
+                >
+
+                    <option
+                        value="Pending"
+                        ${issue.status === "Pending" ? "selected" : ""}
+                    >
+                        Pending
+                    </option>
+
+                    <option
+                        value="In Progress"
+                        ${issue.status === "In Progress" ? "selected" : ""}
+                    >
+                        In Progress
+                    </option>
+
+                    <option
+                        value="Resolved"
+                        ${issue.status === "Resolved" ? "selected" : ""}
+                    >
+                        Resolved
+                    </option>
+
+                    <option
+                        value="Rejected"
+                        ${issue.status === "Rejected" ? "selected" : ""}
+                    >
+                        Rejected
+                    </option>
+
+                </select>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+async function updateStatus(
+    issueId,
+    status
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/issues/${issueId}/status`,
+                {
+                    method: "PUT",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${token}`
+
+                    },
+
+                    body:
+                        JSON.stringify({
+                            status
+                        })
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            alert(
+                "Unable to update issue status."
+            );
+
+            return;
+
+        }
+
+
+        await loadIssues();
+
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+
+loadIssues();
+
+</script>
+
+</body>
+
+</html>
