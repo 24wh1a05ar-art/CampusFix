@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "https://campusfix-ijod.onrender.com";
 
 const user = JSON.parse(localStorage.getItem("user"));
 const token = localStorage.getItem("token");
